@@ -1,0 +1,43 @@
+%start TranslationUnit
+
+
+TranslationUnit ::= List<Decl>;
+
+Decl ::= NamespaceDecl 
+       | FunctionDecl
+       ;
+
+
+NamespaceDecl ::= namespace Opt<QualifiedIdent> { List<Decl> }
+                ;
+
+QualifiedIdentAfter ::= :: ident QualifiedIdentAfter
+                      | <none>
+                      ;
+QualifiedIdent ::= Opt<::> ident QualifiedIdentAfter
+
+
+FunctionDecl ::= Type ident ( SepList<ParamDecl ,> ) { List<Statement> }
+
+BasicType ::= keyword
+            | ident
+            ;
+
+Type ::= keyword
+       | ident
+       | const Type
+       | Type *
+       ;
+
+ParamDecl ::= Type Opt<ident>
+
+Statement ::= { List<Statement> }
+            | return Expr ;
+            | if (Expr) Statement else Statement
+            | Expr ;
+            ;
+
+Expr ::= Expr + Expr
+       | - Expr
+       | litteral
+       | QualifiedIdent ( SepList<Expr ,> )

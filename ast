@@ -1,0 +1,57 @@
+[0;1;32mTranslationUnitDecl[0m[0;33m 0x2316eb8[0m <[0;33m<invalid sloc>[0m> [0;33m<invalid sloc>[0m
+[0;34m|-[0m[0;1;32mTypedefDecl[0m[0;33m 0x2317720[0m <[0;33m<invalid sloc>[0m> [0;33m<invalid sloc>[0m implicit[0;1;36m __int128_t[0m [0;32m'__int128'[0m
+[0;34m| `-[0m[0;32mBuiltinType[0m[0;33m 0x2317480[0m [0;32m'__int128'[0m
+[0;34m|-[0m[0;1;32mTypedefDecl[0m[0;33m 0x2317790[0m <[0;33m<invalid sloc>[0m> [0;33m<invalid sloc>[0m implicit[0;1;36m __uint128_t[0m [0;32m'unsigned __int128'[0m
+[0;34m| `-[0m[0;32mBuiltinType[0m[0;33m 0x23174a0[0m [0;32m'unsigned __int128'[0m
+[0;34m|-[0m[0;1;32mTypedefDecl[0m[0;33m 0x2317b08[0m <[0;33m<invalid sloc>[0m> [0;33m<invalid sloc>[0m implicit[0;1;36m __NSConstantString[0m [0;32m'__NSConstantString_tag'[0m
+[0;34m| `-[0m[0;32mRecordType[0m[0;33m 0x2317880[0m [0;32m'__NSConstantString_tag'[0m
+[0;34m|   `-[0m[0;1;32mCXXRecord[0m[0;33m 0x23177e8[0m[0;1;36m '__NSConstantString_tag'[0m
+[0;34m|-[0m[0;1;32mTypedefDecl[0m[0;33m 0x2317ba0[0m <[0;33m<invalid sloc>[0m> [0;33m<invalid sloc>[0m implicit[0;1;36m __builtin_ms_va_list[0m [0;32m'char *'[0m
+[0;34m| `-[0m[0;32mPointerType[0m[0;33m 0x2317b60[0m [0;32m'char *'[0m
+[0;34m|   `-[0m[0;32mBuiltinType[0m[0;33m 0x2316f60[0m [0;32m'char'[0m
+[0;34m|-[0m[0;1;32mTypedefDecl[0m[0;33m 0x235c718[0m <[0;33m<invalid sloc>[0m> [0;33m<invalid sloc>[0m implicit[0;1;36m __builtin_va_list[0m [0;32m'__va_list_tag[1]'[0m
+[0;34m| `-[0m[0;32mConstantArrayType[0m[0;33m 0x235c6c0[0m [0;32m'__va_list_tag[1]'[0m 1 
+[0;34m|   `-[0m[0;32mRecordType[0m[0;33m 0x2317c90[0m [0;32m'__va_list_tag'[0m
+[0;34m|     `-[0m[0;1;32mCXXRecord[0m[0;33m 0x2317bf8[0m[0;1;36m '__va_list_tag'[0m
+[0;34m|-[0m[0;1;32mNamespaceDecl[0m[0;33m 0x235c770[0m <[0;33m./test.h:6:1[0m, [0;33mline:8:1[0m> [0;33mline:6:11[0m[0;1;36m ns[0m
+[0;34m| `-[0m[0;1;32mFunctionDecl[0m[0;33m 0x235ca68[0m <[0;33mline:7:1[0m, [0;33mcol:76[0m> [0;33mcol:6[0m used[0;1;36m report_assertion_failure[0m [0;32m'void (const char *, const char *, const char *, int)'[0m
+[0;34m|   |-[0m[0;1;32mParmVarDecl[0m[0;33m 0x235c7f8[0m <[0;33mcol:31[0m, [0;33mcol:42[0m> [0;33mcol:43[0m [0;32m'const char *'[0m
+[0;34m|   |-[0m[0;1;32mParmVarDecl[0m[0;33m 0x235c878[0m <[0;33mcol:45[0m, [0;33mcol:56[0m> [0;33mcol:57[0m [0;32m'const char *'[0m
+[0;34m|   |-[0m[0;1;32mParmVarDecl[0m[0;33m 0x235c8f8[0m <[0;33mcol:59[0m, [0;33mcol:70[0m> [0;33mcol:71[0m [0;32m'const char *'[0m
+[0;34m|   `-[0m[0;1;32mParmVarDecl[0m[0;33m 0x235c978[0m <[0;33mcol:73[0m> [0;33mcol:76[0m [0;32m'int'[0m
+[0;34m|-[0m[0;1;32mFunctionDecl[0m[0;33m 0x235ccd0[0m <[0;33mtest.cpp:4:1[0m, [0;33mline:7:1[0m> [0;33mline:4:5[0m[0;1;36m main[0m [0;32m'int (int, char **)'[0m
+[0;34m| |-[0m[0;1;32mParmVarDecl[0m[0;33m 0x235cb40[0m <[0;33mcol:10[0m, [0;33mcol:14[0m> [0;33mcol:14[0m[0;1;36m argc[0m [0;32m'int'[0m
+[0;34m| |-[0m[0;1;32mParmVarDecl[0m[0;33m 0x235cbf0[0m <[0;33mcol:20[0m, [0;33mcol:27[0m> [0;33mcol:27[0m[0;1;36m argv[0m [0;32m'char **'[0m
+[0;34m| `-[0m[0;1;35mCompoundStmt[0m[0;33m 0x235d518[0m <[0;33mcol:33[0m, [0;33mline:7:1[0m>
+[0;34m|   |-[0m[0;1;35mCompoundStmt[0m[0;33m 0x235d470[0m <[0;33m./test.h:11:3[0m, [0;33mline:17:3[0m>
+[0;34m|   | `-[0m[0;1;35mIfStmt[0m[0;33m 0x235d440[0m <[0;33mline:12:5[0m, [0;33mline:16:5[0m> has_else
+[0;34m|   |   |-[0m[0;1;35mBinaryOperator[0m[0;33m 0x235ce48[0m <[0;33mtest.cpp:5:15[0m, [0;33mcol:24[0m> [0;32m'bool'[0m[0;36m[0m[0;36m[0m '=='
+[0;34m|   |   | |-[0m[0;1;35mBinaryOperator[0m[0;33m 0x235ce08[0m <[0;33mcol:15[0m, [0;33mcol:19[0m> [0;32m'int'[0m[0;36m[0m[0;36m[0m '+'
+[0;34m|   |   | | |-[0m[0;1;35mIntegerLiteral[0m[0;33m 0x235cdc8[0m <[0;33mcol:15[0m> [0;32m'int'[0m[0;36m[0m[0;36m[0m[0;1;36m 1[0m
+[0;34m|   |   | | `-[0m[0;1;35mIntegerLiteral[0m[0;33m 0x235cde8[0m <[0;33mcol:19[0m> [0;32m'int'[0m[0;36m[0m[0;36m[0m[0;1;36m 1[0m
+[0;34m|   |   | `-[0m[0;1;35mIntegerLiteral[0m[0;33m 0x235ce28[0m <[0;33mcol:24[0m> [0;32m'int'[0m[0;36m[0m[0;36m[0m[0;1;36m 0[0m
+[0;34m|   |   |-[0m[0;1;35mCompoundStmt[0m[0;33m 0x235ce68[0m <[0;33m./test.h:12:15[0m, [0;33mline:13:5[0m>
+[0;34m|   |   `-[0m[0;1;35mCompoundStmt[0m[0;33m 0x235d420[0m <[0;33mcol:12[0m, [0;33mline:16:5[0m>
+[0;34m|   |     |-[0m[0;1;35mCallExpr[0m[0;33m 0x235d110[0m <[0;33mline:14:7[0m, [0;33mcol:72[0m> [0;32m'void'[0m[0;36m[0m[0;36m[0m
+[0;34m|   |     | |-[0m[0;1;35mImplicitCastExpr[0m[0;33m 0x235d0f8[0m <[0;33mcol:7[0m, [0;33mcol:13[0m> [0;32m'void (*)(const char *, const char *, const char *, int)'[0m[0;36m[0m[0;36m[0m <[0;31mFunctionToPointerDecay[0m>
+[0;34m|   |     | | `-[0m[0;1;35mDeclRefExpr[0m[0;33m 0x235cf20[0m <[0;33mcol:7[0m, [0;33mcol:13[0m> [0;32m'void (const char *, const char *, const char *, int)'[0m[0;36m lvalue[0m[0;36m[0m [0;1;32mFunction[0m[0;33m 0x235ca68[0m[0;1;36m 'report_assertion_failure'[0m [0;32m'void (const char *, const char *, const char *, int)'[0m
+[0;34m|   |     | |-[0m[0;1;35mImplicitCastExpr[0m[0;33m 0x235d150[0m <[0;33m<scratch space>:2:1[0m> [0;32m'const char *'[0m[0;36m[0m[0;36m[0m <[0;31mArrayToPointerDecay[0m>
+[0;34m|   |     | | `-[0m[0;1;35mStringLiteral[0m[0;33m 0x235cfc8[0m <[0;33mcol:1[0m> [0;32m'const char[11]'[0m[0;36m lvalue[0m[0;36m[0m[0;1;36m "1 + 1 == 0"[0m
+[0;34m|   |     | |-[0m[0;1;35mImplicitCastExpr[0m[0;33m 0x235d168[0m <[0;33mtest.cpp:5:27[0m> [0;32m'const char *'[0m[0;36m[0m[0;36m[0m <[0;31mArrayToPointerDecay[0m>
+[0;34m|   |     | | `-[0m[0;1;35mStringLiteral[0m[0;33m 0x235d068[0m <[0;33mcol:27[0m> [0;32m'const char[9]'[0m[0;36m lvalue[0m[0;36m[0m[0;1;36m "Oh oh..."[0m
+[0;34m|   |     | |-[0m[0;1;35mImplicitCastExpr[0m[0;33m 0x235d180[0m <[0;33m<scratch space>:3:1[0m> [0;32m'const char *'[0m[0;36m[0m[0;36m[0m <[0;31mArrayToPointerDecay[0m>
+[0;34m|   |     | | `-[0m[0;1;35mStringLiteral[0m[0;33m 0x235d088[0m <[0;33mcol:1[0m> [0;32m'const char[9]'[0m[0;36m lvalue[0m[0;36m[0m[0;1;36m "test.cpp"[0m
+[0;34m|   |     | `-[0m[0;1;35mIntegerLiteral[0m[0;33m 0x235d0a8[0m <[0;33mline:4:1[0m> [0;32m'int'[0m[0;36m[0m[0;36m[0m[0;1;36m 5[0m
+[0;34m|   |     `-[0m[0;1;35mCallExpr[0m[0;33m 0x235d400[0m <[0;33m./test.h:4:22[0m, [0;33mcol:37[0m> [0;32m'void'[0m[0;36m[0m[0;36m[0m
+[0;34m|   |       `-[0m[0;1;35mImplicitCastExpr[0m[0;33m 0x235d3e8[0m <[0;33mcol:22[0m> [0;32m'void (*)() __attribute__((noreturn)) noexcept'[0m[0;36m[0m[0;36m[0m <[0;31mBuiltinFnToFnPtr[0m>
+[0;34m|   |         `-[0m[0;1;35mDeclRefExpr[0m[0;33m 0x235d368[0m <[0;33mcol:22[0m> [0;32m'<builtin fn type>'[0m[0;36m[0m[0;36m[0m [0;1;32mFunction[0m[0;33m 0x235d248[0m[0;1;36m '__builtin_trap'[0m [0;32m'void () __attribute__((noreturn)) noexcept'[0m
+[0;34m|   |-[0m[0;1;35mNullStmt[0m[0;33m 0x235d488[0m <[0;33mtest.cpp:5:38[0m>
+[0;34m|   `-[0m[0;1;35mReturnStmt[0m[0;33m 0x235d508[0m <[0;33mline:6:3[0m, [0;33mcol:18[0m>
+[0;34m|     `-[0m[0;1;35mBinaryOperator[0m[0;33m 0x235d4e8[0m <[0;33mcol:14[0m, [0;33mcol:18[0m> [0;32m'int'[0m[0;36m[0m[0;36m[0m '+'
+[0;34m|       |-[0m[0;1;35mIntegerLiteral[0m[0;33m 0x235d490[0m <[0;33mcol:14[0m> [0;32m'int'[0m[0;36m[0m[0;36m[0m[0;1;36m 1[0m
+[0;34m|       `-[0m[0;1;35mUnaryOperator[0m[0;33m 0x235d4d0[0m <[0;33mcol:17[0m, [0;33mcol:18[0m> [0;32m'int'[0m[0;36m[0m[0;36m[0m prefix '-'
+[0;34m|         `-[0m[0;1;35mIntegerLiteral[0m[0;33m 0x235d4b0[0m <[0;33mcol:18[0m> [0;32m'int'[0m[0;36m[0m[0;36m[0m[0;1;36m 1[0m
+[0;34m`-[0m[0;1;32mLinkageSpecDecl[0m[0;33m 0x235d1f8[0m <[0;33m./test.h:4:22[0m> [0;33mcol:22[0m implicit C
+[0;34m  `-[0m[0;1;32mFunctionDecl[0m[0;33m 0x235d248[0m <[0;33mcol:22[0m> [0;33mcol:22[0m implicit used[0;1;36m __builtin_trap[0m [0;32m'void () __attribute__((noreturn)) noexcept'[0m extern
+[0;34m    |-[0m[0;1;34mBuiltinAttr[0m[0;33m 0x235d2e8[0m <[0;33m<invalid sloc>[0m> Implicit 488
+[0;34m    `-[0m[0;1;34mNoThrowAttr[0m[0;33m 0x235d340[0m <[0;33mcol:22[0m> Implicit
