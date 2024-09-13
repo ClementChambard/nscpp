@@ -25,7 +25,7 @@ pub fn line_join(source: String) -> Vec<SourceLine> {
         let mut temp_str = String::from(c);
         // Warning is not true
         //#[allow(lint)]
-        while let Some(c) = chars.next() {
+        for c in &mut chars {
             if !c.is_whitespace() {
                 out_source.push_str(&temp_str);
                 out_source.push(c);
@@ -40,6 +40,9 @@ pub fn line_join(source: String) -> Vec<SourceLine> {
                 break;
             }
         }
+    }
+    if !out_source.is_empty() {
+        lines.push(SourceLine::Line(line, out_source));
     }
     lines
 }

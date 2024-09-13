@@ -14,18 +14,72 @@ pub enum PPTokType {
     HeaderName(String),
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
-pub struct PPToken<'a> {
-    pub tok: PPTokType,
-    pub loc: Location<'a>,
+impl PPTokType {
+    pub fn stringify(&self) -> String {
+        match self {
+            Self::Ident(s) | Self::Punct(s) | Self::Num(s) => s.clone(),
+            Self::Chr(s) => {
+                let mut out = String::new();
+                for c in s.chars() {
+                    if c == '\\' {
+                        out.push('\\');
+                    }
+                    out.push(c);
+                }
+                out
+            }
+            Self::HeaderName(_) => {
+                // Should not happen
+                unreachable!();
+            }
+            Self::Str(s) => {
+                let mut out = String::new();
+                let mut seen_quote = false;
+                for c in s.chars().take(s.len() - 1) {
+                    if c == '\\' {
+                        out.push('\\');
+                    }
+                    if !seen_quote && c == '"' {
+                        out.push('\\');
+                        seen_quote = true;
+                    }
+                    out.push(c);
+                }
+                out.push('\\');
+                out.push('"');
+                out
+            }
+            Self::Other(c) => String::from(*c),
+            Self::Whitespace => String::from(' '),
+            Self::NewLine => String::from("\\n"),
+        }
+    }
 }
 
-// TODO: HeaderName
-pub fn parse_one<'a, 'b>(
-    filename: &'a str,
-    source: &'b [SourceLine],
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub struct PPToken {
+    pub tok: PPTokType,
+    pub loc: Location,
+}
+
+impl PPToken {
+    pub fn is_punct(&self, s: &str) -> bool {
+        match &self.tok {
+            PPTokType::Punct(s2) => s == s2,
+            _ => false,
+        }
+    }
+    pub fn is_newline(&self) -> bool {
+        matches!(&self.tok, PPTokType::NewLine)
+    }
+}
+
+pub fn parse_one<'a>(
+    filename: &str,
+    source: &'a [SourceLine],
     col: usize,
-) -> (&'b [SourceLine], usize, PPToken<'a>) {
+    headername_allowed: bool,
+) -> (&'a [SourceLine], usize, PPToken) {
     let mut source = source;
     let mut source_iter = source.iter();
     let mut next = source_iter.next().unwrap();
@@ -49,6 +103,18 @@ pub fn parse_one<'a, 'b>(
     }
     if let Some(res) = parse_whitespace(filename, source, col) {
         return res;
+    }
+    if headername_allowed {
+        if let Some((cnt, tok)) = parse_headername(line_str) {
+            return (
+                source,
+                col + cnt,
+                PPToken {
+                    tok,
+                    loc: Location::lrange(filename, *line_num, col..col + cnt - 1),
+                },
+            );
+        }
     }
     if let Some(res) = parse_string(filename, source, col) {
         return res;
@@ -77,11 +143,11 @@ pub fn parse_one<'a, 'b>(
     )
 }
 
-fn parse_whitespace<'a, 'b>(
-    filename: &'b str,
+fn parse_whitespace<'a>(
+    filename: &str,
     lines: &'a [SourceLine],
     col: usize,
-) -> Option<(&'a [SourceLine], usize, PPToken<'b>)> {
+) -> Option<(&'a [SourceLine], usize, PPToken)> {
     let mut lines = lines;
     let mut lines_iter = lines.iter();
     let next = lines_iter.next()?;
@@ -298,19 +364,25 @@ fn parse_number(s: &str) -> Option<(usize, PPTokType)> {
     Some((cnt, PPTokType::Num(String::from(&s[..cnt]))))
 }
 
-fn read_escape_seq(_text: &str) -> Option<(&str, usize)> {
-    todo!("read escape seq");
+fn read_escape_seq(text: &str) -> Option<(&str, usize)> {
+    // in preprocessing stage, only check for \\, \' and \" escape sequences.
+    match text.chars().next()? {
+        '\'' => Some(("\\'", 2)),
+        '"' => Some(("\\\"", 2)),
+        '\\' => Some(("\\\\", 2)),
+        _ => Some(("\\", 1)),
+    }
 }
 
 fn read_s_char(text: &str) -> Option<(&str, usize)> {
     match text.chars().next()? {
         '"' | '\n' => None,
-        '\\' => read_escape_seq(text),
+        '\\' => read_escape_seq(&text[1..]),
         _ => Some((&text[..1], 1)),
     }
 }
 
-fn _read_d_char(text: &str) -> Option<(&str, usize)> {
+fn read_d_char(text: &str) -> Option<(&str, usize)> {
     let c = text.chars().next()?;
     if c.is_whitespace() || c == '\\' || c == '(' || c == ')' {
         None
@@ -322,25 +394,89 @@ fn _read_d_char(text: &str) -> Option<(&str, usize)> {
 fn read_c_char(text: &str) -> Option<(&str, usize)> {
     match text.chars().next()? {
         '\'' | '\n' => None,
-        '\\' => read_escape_seq(text),
+        '\\' => read_escape_seq(&text[1..]),
         _ => Some((&text[..1], 1)),
     }
 }
 
-fn parse_raw_string<'a, 'b>(
-    _filename: &'a str,
-    _lines: &'b [SourceLine],
-    _col: usize,
-    _start: String,
-) -> Option<(&'b [SourceLine], usize, PPToken<'a>)> {
-    unimplemented!("parse_raw_string: TODO");
-}
-
-fn parse_string<'a, 'b>(
-    filename: &'b str,
+fn parse_raw_string<'a>(
+    filename: &str,
     lines: &'a [SourceLine],
     col: usize,
-) -> Option<(&'a [SourceLine], usize, PPToken<'b>)> {
+    start: String,
+) -> Option<(&'a [SourceLine], usize, PPToken)> {
+    let mut lines = lines;
+    let mut lines_iter = lines.iter();
+    let next = lines_iter.next()?;
+    let SourceLine::Line(line_num, line_str) = next else {
+        unreachable!();
+    };
+    let mut line_str = &line_str[col..];
+    let start_col = col - start.len();
+    let mut out = start;
+    let mut col = col;
+    let mut start_seq = String::new();
+    // read at most 16 d-chars
+    // read '('
+    // read any until )seq"
+    while let Some((s, c)) = read_d_char(line_str) {
+        line_str = &line_str[c..];
+        start_seq.push_str(s);
+        col += c;
+        if col - start_col >= 16 {
+            break;
+        }
+    }
+    let c = line_str.chars().next()?;
+    if c != '(' {
+        return None;
+    }
+    line_str = &line_str[1..];
+    let end_seq = format!("){}\"", start_seq);
+    out.push_str(&start_seq);
+    out.push('(');
+
+    let mut last_line = *line_num;
+    loop {
+        if line_str.is_empty() {
+            match lines_iter.next()? {
+                SourceLine::Join(s) => {
+                    out.push_str(s);
+                }
+                SourceLine::Line(n, l) => {
+                    line_str = l;
+                    col = 0;
+                    last_line = *n;
+                }
+            }
+            lines = &lines[1..];
+            out.push('\n');
+            continue;
+        }
+        if line_str.starts_with(&end_seq) {
+            out.push_str(&end_seq);
+            col += end_seq.len();
+            return Some((
+                lines,
+                col + 1,
+                PPToken {
+                    tok: PPTokType::Str(out),
+                    loc: Location::range(filename, *line_num..last_line, start_col..col),
+                },
+            ));
+        } else {
+            out.push(line_str.chars().next().unwrap());
+            line_str = &line_str[1..];
+            col += 1;
+        }
+    }
+}
+
+fn parse_string<'a>(
+    filename: &str,
+    lines: &'a [SourceLine],
+    col: usize,
+) -> Option<(&'a [SourceLine], usize, PPToken)> {
     let mut lines = lines;
     let mut lines_iter = lines.iter();
     let next = lines_iter.next()?;
@@ -426,7 +562,7 @@ fn parse_char(text: &str) -> Option<(usize, PPTokType)> {
     let mut out = String::new();
     let mut cnt = 0;
     let mut text = text;
-    // TODO: can_multi
+    // can_multi: Conditionnally supported, so...
     // let mut can_multi = false;
     if text.starts_with('\'') {
         out.push('\'');
@@ -445,12 +581,11 @@ fn parse_char(text: &str) -> Option<(usize, PPTokType)> {
         return None;
     }
 
-    let Some((c, c_cnt)) = read_c_char(text) else {
-        panic!("invalid c-char in char litteral");
-    };
-    out.push_str(c);
-    cnt += c_cnt;
-    text = &text[c_cnt..];
+    while let Some((c, c_cnt)) = read_c_char(text) {
+        out.push_str(c);
+        cnt += c_cnt;
+        text = &text[c_cnt..];
+    }
 
     if !text.starts_with('\'') {
         panic!("missing closing ''' character in char litteral");
@@ -479,6 +614,38 @@ fn parse_punctuator(text: &str) -> Option<(usize, PPTokType)> {
     None
 }
 
+fn parse_headername(text: &str) -> Option<(usize, PPTokType)> {
+    let mut chars = text.chars();
+    let mode = match chars.next()? {
+        '"' => 1,
+        '<' => 0,
+        _ => return None,
+    };
+    if mode == 1 {
+        let mut s = String::from("\"");
+        for c in chars {
+            match c {
+                '\n' => return None,
+                '"' => break,
+                _ => s.push(c),
+            }
+        }
+        s.push('"');
+        Some((s.len(), PPTokType::HeaderName(s)))
+    } else {
+        let mut s = String::from("<");
+        for c in chars {
+            match c {
+                '\n' => return None,
+                '>' => break,
+                _ => s.push(c),
+            }
+        }
+        s.push('>');
+        Some((s.len(), PPTokType::HeaderName(s)))
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -498,7 +665,7 @@ mod test {
                 3,
                 PPToken {
                     tok: PPTokType::Str(String::from("\"test\"")),
-                    loc: Location::new("testfilename", 0, 2)
+                    loc: Location::range("testfilename", 0..1, 2..2)
                 }
             ))
         );
@@ -524,5 +691,11 @@ mod test {
                 }
             ))
         );
+    }
+
+    #[test]
+    fn str_stringify_test() {
+        let s = PPTokType::Str(String::from("\"test\\\"aha\\\"\""));
+        assert_eq!(s.stringify(), String::from("\\\"test\\\\\"aha\\\\\"\\\""));
     }
 }

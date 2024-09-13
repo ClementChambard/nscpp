@@ -1,43 +1,363 @@
-%start TranslationUnit
+TranslationUnit ::= List<Decl> ;
 
-
-TranslationUnit ::= List<Decl>;
-
-Decl ::= NamespaceDecl 
-       | FunctionDecl
+Decl ::= FunctionDecl
+       | TemplateDecl // partial template specialization ( template <typename T> struct A<int, T> {}; )
+       | ExplicitTemplateInstanciation
+       | ExplicitTemplateSpecialization
+       | NamespaceDefinition
+       | LinkageSpecification
+       | Opt<Attr> ';'
+       | Opt<Attr> Declarator(function) ';' (function declaration without a decl-specifier-seq)
+       | BlockDeclaration
        ;
 
+LinkageSpecification ::= 'extern' str '{' List<Decl> '}'
+                       | 'extern' str Decl
+                       ;
 
-NamespaceDecl ::= namespace Opt<QualifiedIdent> { List<Decl> }
+NamespaceDefinition ::= 'namespace' id(NsName) '{' List<Decl> '}'
+                      | 'inline' 'namespace' id(NsName) '{' List<Decl> '}'
+                      | 'namespace' '{' List<Decl> '}'
+                      | 'namespace' ns-name?? '::' member-name?? '{' List<Decl> '}'
+                      | 'namespace' ns-name?? '::' 'inline' member-name?? '{' List<Decl> '}'
+                      ;
+
+TemplateDecl ::= 'template' '<' TemplateParameterList '>' Opt<RequiresClause> Decl
+               | 'template' '<' TemplateParameterList '>' 'concept' ConceptName '=' ConstraintExpression ';'
+
+ExplicitTemplateInstanciation ::= Opt<'extern'> 'template' ClassKey TemplateName '<' TemplateArgs '>' ';' ;
+
+ExplicitTemplateSpecialization ::= 'template' '<' '>' Decl ;   // ???? Is it really Decl ?
+
+FunctionDecl ::= Opt<Attr> List<Specifier> Declarator(function, can be parenthesised) List<VirtSpecifier> FunctionBody
+               | Opt<Attr> List<Specifier> Declarator(function, can be parenthesised) RequiresClause FunctionBody
+               ;
+
+FunctionBody ::= Opt<CtorInit> CompoundStmt
+               | 'try' Opt<CtorInit> CompoundStmt Handler List<Handler>
+               | '=' 'default' ';'
+               | '=' 'delete' ';'
+               | '=' 'delete' '(' str ')' ';'
+               ;
+
+ParameterDecl ::= Opt<Attr> NonEmptyList<Specifier> Declarator
+                | Opt<Attr> 'this' NonEmptyList<Specifier> Declarator
+                | Opt<Attr> NonEmptyList<Specifier> Declarator '=' InitializerClause
+                | Opt<Attr> NonEmptyList<Specifier> Opt<AbstractDeclarator>
+                | Opt<Attr> 'this' NonEmptyList<Specifier> Opt<AbstractDeclarator>
+                | Opt<Attr> NonEmptyList<Specifier> Opt<AbstractDeclarator> '=' InitializerClause
+                | 'void'
+                | Opt<','> '...'
                 ;
 
-QualifiedIdentAfter ::= :: ident QualifiedIdentAfter
-                      | <none>
-                      ;
-QualifiedIdent ::= Opt<::> ident QualifiedIdentAfter
-
-
-FunctionDecl ::= Type ident ( SepList<ParamDecl ,> ) { List<Statement> }
-
-BasicType ::= keyword
-            | ident
+Attribute ::= id
+            | id '::' id
+            | id '(' BalancedTokenSeq ')'
+            | id '::' id '(' BalancedTokenSeq ')'
             ;
 
-Type ::= keyword
-       | ident
-       | const Type
-       | Type *
+Attr ::= '[' '[' List<Attribute> ']' ']'
+       | '[' '[' 'using' AttributeNamespace ':' SepList<Attribute, ','> ']' ']'
        ;
 
-ParamDecl ::= Type Opt<ident>
+Label ::= Opt<Attr> id ':'
+        | Opt<Attr> 'case' Expr(Constexpr) ':'
+        | Opt<Attr> 'default' ':'
+        ;
 
-Statement ::= { List<Statement> }
-            | return Expr ;
-            | if (Expr) Statement else Statement
-            | Expr ;
+CompoundStmt ::= Opt<Attr> '{' List<Stmt> List<Label> '}'
+                ;
+
+
+TypeAliasDecl ::= 'using' id Opt<Attr> '=' TypeId ';' ;
+
+AsmDecl ::= Opt<Attr> 'asm' '(' str ')' ';'              // until C++26
+          | Opt<Attr> 'asm' '(' BalancedTokenSeq ')' ';' // since C++26
+          ;
+
+NestedNameSpecifier ::= (sequence of names and scope resolution operators '::' ending with scope resolution)
+                      ;
+
+NamespaceAliasDecl ::= 'namespace' id(AliasName) '=' Opt<NestedNameSpecifier> id(NsName) ';'
+                     ;
+
+UsingDecl ::= 'using' Opt<'typename'> NestedNameSpecifier id ';'
+            | 'using' DeclaratorList ';'
             ;
 
-Expr ::= Expr + Expr
-       | - Expr
-       | litteral
-       | QualifiedIdent ( SepList<Expr ,> )
+UsingDirective ::= Opt<Attr> 'using' 'namespace' Opt<NestedNameSpecifier> id(NsName) ';'
+                 ;
+
+UsingEnum ::= 'using' 'enum' Opt<NestedNameSpecifier> id ';'
+            | 'using' 'enum' SimpleTemplateIdent ';'
+            ;
+
+StaticAssert ::= 'static_assert' '(' Expr(BoolConstexpr) ',' str ')'
+               | 'static_assert' '(' Expr(BoolConstexpr) ')'
+               | 'static_assert' '(' Expr(BoolConstexpr) ',' Expr(Constexpr) ')'
+               ;
+
+EnumSpec ::= EnumKey Opt<Attr> Opt<EnumHeadName> Opt<EnumBase> '{' SepList<Enumerator, ','> '}'
+           | EnumKey Opt<Attr> Opt<EnumHeadName> Opt<EnumBase> '{' NonEmptySepList<Enumerator, ','> ',' '}'
+           ;
+
+EnumKey ::= 'enum' | 'enum' 'class' | 'enum' 'struct' ;
+EnumHeadName ::= Opt<NestedNameSpecifier> id ;
+EnumBase ::= ':' NonEmptyList<TypeSpecifier>(Integer)
+Enumerator ::= id
+             | id '=' Expr(Constexpr)
+             ;
+
+OpaqueEnumDecl ::= EnumKey Opt<Attr> EnumHeadName Opt<EnumBase> ';'
+                 ;
+
+ClassSpec ::= ClassKey Opt<Attr> ClassHeadName Opt<'final'> Opt<BaseClause> '{' MemberSpecification '}'
+            | ClassKey Opt<Attr> Opt<BaseClause> '{' MemberSpecification '}'
+            ;
+
+AccessSpecifier ::= 'public' | 'protected' | 'private' ;
+ClassKey ::= 'class' | 'struct' | 'union' ;
+ClassHeadName ::= Opt<NestedNameSpecifier> id ;
+BaseClause ::= ':' NonEmptySepList<BaseSpecifier, ','> ;
+BaseSpecifier ::= Opt<Attr> Opt<'virtual'> AccessSpecifier ClassOrComputed
+                | Opt<Attr> Opt<AccessSpecifier> 'virtual' ClassOrComputed
+                | Opt<Attr> ClassOrComputed
+                ;
+
+ClassOrComputed ::= Opt<NestedNameSpecifier> id(TypeName)
+                  | NestedNameSpecifier 'template' SimpleTemplateId??
+                  | DecltypeSpecifier
+                  | PackIndexingSpecifier
+                  ;
+
+MemberSpecification ::= Opt<Attr> List<Specifier> List<MemberDeclarator> ';'                        // +template version
+                      | Opt<Attr> List<Specifier> List<MemberDeclarator> CompoundStmt Opt<';'>      // +template version
+                      | AccessSpecifier ':'
+                      | UsingDecl
+                      | StaticAssert
+                      | TypeAliasDecl
+                      | DeductionGuide??
+                      | UsingEnum
+                      // Where is sub class, sub enum ???
+                      ;
+
+VirtSpecifier ::= 'override' | 'final' ;
+
+MemberDeclarator ::= InitDeclarator(no DirectNonListInit)
+                   | BitFieldDeclarator
+                   | '=' lit(0)
+                   | VirtSpecifier
+                   ;
+
+BraceOrEqInitializer ::= ;
+
+BitFieldDeclarator ::= Opt<id> Opt<Attr> ':' Expr(IntConstexpr, >= 0) Opt<BraceOrEqInitializer>;
+
+InitDeclarator ::= Declarator Initializer
+                 | Declarator RequiresClause;
+
+RequiresClause ::= 'requires' ?? ;
+
+RefQualifier ::= '&'
+               | '&&'
+               ;
+
+NoExcept ::= 'noexcept'
+           | 'noexcept' '(' Expr ')'
+           ;
+
+TrailingRetType ::= '->' NonEmptyList<TypeSpecifier>
+
+Declarator ::= Opt<NestedNameSpecifier> id Opt<Attr>
+             | '...' id Opt<Attr>
+             | '*' Opt<Attr> Opt<CVQualifier> Declarator
+             | NestedNameSpecifier * Opt<Attr> Opt<CVQualifier> Declarator
+             | RefQualifier Opt<Attr> Declarator
+             | Declarator(NoPtr) '[' Opt<Expr(Constexpr)> ']' Opt<Attr>
+             | Declarator(NoPtr) '(' SepList<Parameter, ','> ')' Opt<CVQualifier> Opt<RefQualifier> Opt<NoExcept> Opt<Attr> Opt<TrailingRetType>
+             // ??? Some can be in parens ???
+             ;
+
+Initializer ::= '=' InitializerClause
+              | '{' SepList<InitializerClause, ','> '}'
+              | '{' NonEmptySepList<DesignatedInitializer, ','> '}'
+              | '(' NonEmptySepList<InitializerClause, ','> )'
+              ;
+
+InitializerClause ::= '{' SepList<InitializerClause, ','> '}'
+                    | '{' NonEmptySepList<DesignatedInitializer, ','> '}'
+                    | Expr
+                    ;
+
+DesignatedInitializer ::= '.' id '=' InitializerClause 
+                        ;
+
+OpaqueClassDecl ::= ClassKey Opt<Attr> id ';'
+                  ;
+
+DecltypeSpecifier ::= 'decltype' '(' entity?? ')'
+                    | 'decltype' '(' expr ')'
+                    ;
+
+PackIndexingSpecifier ::= Expr(id-expression??) '...' '[' Expr ']'
+                        | TypedefName?? '...' '[' Expr ']'
+                        ;
+
+SimpleDecl ::= NonEmptyList<Specifier> SepList<InitDeclarator, ','> ';'
+             ;
+
+Specifier ::= 'typedef'
+            | 'inline'
+            | 'virtual'
+            | 'explicit'
+            | 'friend'
+            | 'constexpr'
+            | 'consteval'
+            | 'constinit'
+            | 'static'
+            | 'thread_local'
+            | 'extern'
+            | 'mutable'
+            | TypeSpecifier
+            | Attr
+            ;
+
+SimpleTypeSpecifier ::= 'char' | 'char8_t' | 'char16_t' | 'char32_t' | 'wchar_t'
+                      | 'bool' | 'short' | 'int' | 'long' | 'signed' | 'unsigned'
+                      | 'float' | 'double' | 'void' | 'auto'
+                      | DecltypeSpecifier
+                      | PackIndexingSpecifier     // since C++26
+                      | TemplateName
+                      | id(Class, Enum, Alias)
+                      ;
+
+ElaboratedTypeSpecifier ::= ClassKey id(ClassName)
+                          | 'enum' id(EnumName)
+                          | ClassKey Attr id ';'
+                          ;
+
+TypenameSpecifier ::= 'typename' ;    // ???? is that correct ????
+
+CVQualifier ::= 'const' | 'volatile' ;
+
+TypeSpecifier ::= ClassSpec
+                | EnumSpec
+                | SimpleTypeSpecifier
+                | ElaboratedTypeSpecifier
+                | TypenameSpecifier
+                | CVQualifier
+                ;
+
+BlockDeclaration ::= AsmDecl
+                   | TypeAliasDecl
+                   | NamespaceAliasDecl
+                   | UsingDecl
+                   | UsingDirective
+                   | UsingEnum
+                   | StaticAssert
+                   | OpaqueEnumDecl
+                   | OpaqueClassDecl
+                   | SimpleDecl
+                   ;
+
+Stmt ::= Label Stmt
+       | Opt<Attr> Expr ';'
+       | ';'
+       | CompoundStmt
+       | Opt<Attr> 'if' Opt<constexpr> '(' Opt<InitStmt> Condition ')' Stmt
+       | Opt<Attr> 'if' Opt<constexpr> '(' Opt<InitStmt> Condition ')' Stmt 'else' Stmt
+       | Opt<Attr> 'switch' '(' Opt<InitStmt> Condition ')' Stmt
+       | Opt<Attr> 'if' Opt<'!'> 'consteval' CompoundStmt
+       | Opt<Attr> 'if' Opt<'!'> 'consteval' CompoundStmt 'else' Stmt
+       | Opt<Attr> 'while' '(' Condition ')' Stmt
+       | Opt<Attr> 'do' Stmt 'while' '(' Expr ')' ';'
+       | Opt<Attr> 'for' '(' InitStmt Opt<Condition> ';' Opt<Expr> ')' Stmt
+       | Opt<Attr> 'for' '(' Opt<InitStmt> ForRangeDecl ':' ForRangeInit ')' Stmt
+       | Opt<Attr> 'break' ';'
+       | Opt<Attr> 'continue' ';'
+       | Opt<Attr> 'return' Opt<Expr> ';'
+       | Opt<Attr> 'return' BracedInitList ';'
+       // co_return ......... ???
+       | Opt<Attr> 'goto' id ';'
+       | BlockDeclaration
+       | Opt<Attr> 'try' CompoundStmt NonEmptyList<Handler>
+       ;
+
+Handler ::= 'catch' '(' Opt<Attr> NonEmptyList<TypeSpecifier> Declarator ')' CompoundStmt
+          | 'catch' '(' Opt<Attr> NonEmptyList<TypeSpecifier> Opt<AbstractDeclarator> ')' CompoundStmt
+          | 'catch' '(' '...' ')' CompoundStmt
+          ;
+
+
+//   |   firsts  (Decl)
+//___|___________________________________
+// 0 | '[' Fst(Specifier) Fst(Declarator(function, can be parenthesised))
+// 1 | 'template'
+// 2 | 'template' 'extern'
+// 3 | 'template'
+// 4 | 'namespace'
+// 5 | 'extern'
+// 6 | '[' ';'
+// 7 | '[' Fst(Declarator(function))
+// 8 | '[' 'asm' 'using' 'namespace' 'static_assert' 'enum' 'class' 'struct' 'union' Fst(Specifier)
+//
+// TOTAL:
+// '[' 'template' 'namespace' 'extern'
+// 'typedef' 'inline' 'virtual' 'explicit' 'friend' 'constexpr' 'consteval'
+// 'constinit' 'static' 'thread_local' 'mutable'
+// 'class' 'struct' 'union' 'enum' 'typename' 'const' 'volatile'
+// 'char' 'char8_t' 'char16_t' 'char32_t' 'wchar_t'
+// 'bool' 'short' 'int' 'long' 'signed' 'unsigned'
+// 'float' 'double' 'void' 'auto' 'decltype' ident
+
+//   |   firsts   (BlockDeclaration)
+//___|___________________________________
+// 0 | '[' 'asm'
+// 1 | 'using'
+// 2 | 'namespace'
+// 3 | 'using'
+// 4 | '[' 'using'
+// 5 | 'using'
+// 6 | 'static_assert'
+// 7 | 'enum'
+// 8 | 'class' 'struct' 'union'
+// 9 | Fst(Specifier)
+//
+// TOTAL:
+// '[' 'asm' 'using' 'namespace' 'static_assert' 'enum' 'class' 'struct' 'union'
+// 'typedef' 'inline' 'virtual' 'explicit' 'friend' 'constexpr' 'consteval'
+// 'constinit' 'static' 'thread_local' 'extern' 'mutable'
+// 'typename' 'const' 'volatile'
+// 'char' 'char8_t' 'char16_t' 'char32_t' 'wchar_t'
+// 'bool' 'short' 'int' 'long' 'signed' 'unsigned'
+// 'float' 'double' 'void' 'auto' 'decltype' ident
+
+// firsts (Specifier)
+// 'typedef' 'inline' 'virtual' 'explicit' 'friend' 'constexpr' 'consteval'
+// 'constinit' 'static' 'thread_local' 'extern' 'mutable'
+// 'class' 'struct' 'union' 'enum' 'typename' 'const' 'volatile'
+// 'char' 'char8_t' 'char16_t' 'char32_t' 'wchar_t'
+// 'bool' 'short' 'int' 'long' 'signed' 'unsigned'
+// 'float' 'double' 'void' 'auto' 'decltype' ident '['
+
+//   |   firsts   (TypeSpecifier)
+//___|___________________________________
+// 0 | 'class' 'struct' 'union'
+// 1 | 'enum'
+// 2 | 'char' 'char8_t' 'char16_t' 'char32_t' 'wchar_t'
+//   | 'bool' 'short' 'int' 'long' 'signed' 'unsigned'
+//   | 'float' 'double' 'void' 'auto' 'decltype' ident
+// 3 | 'class' 'struct' 'union' 'enum'
+// 4 | 'typename'
+// 5 | 'const' 'volatile'
+//
+// TOTAL:
+// 'class' 'struct' 'union' 'enum' 'typename' 'const' 'volatile'
+// 'char' 'char8_t' 'char16_t' 'char32_t' 'wchar_t'
+// 'bool' 'short' 'int' 'long' 'signed' 'unsigned'
+// 'float' 'double' 'void' 'auto' 'decltype' ident
+
+// firsts(SimpleTypeSpecifier)
+// 'char' 'char8_t' 'char16_t' 'char32_t' 'wchar_t'
+// 'bool' 'short' 'int' 'long' 'signed' 'unsigned'
+// 'float' 'double' 'void' 'auto' 'decltype' ident
