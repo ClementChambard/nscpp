@@ -35,6 +35,20 @@ pub struct ParamDecl {
     pub loc: Location,
 }
 
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+pub struct Noexcept {}
+
+impl Noexcept {
+    pub fn parse<'a>(toks: &'a [Token], _ctx: &mut Context) -> Option<(Self, &'a [Token])> {
+        if toks.first()?.tok.is_kw("noexcept") {
+            // TODO: noexcept(ConstExpr) should evaluate expression
+            Some((Self {}, &toks[1..]))
+        } else {
+            None
+        }
+    }
+}
+
 impl ParamDecl {
     pub fn parse<'a>(toks: &'a [Token], ctx: &mut Context) -> Option<(Self, &'a [Token])> {
         let (ty, mut toks) = Type::parse(toks, ctx)?;

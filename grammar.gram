@@ -40,15 +40,15 @@ FunctionBody ::= Opt<CtorInit> CompoundStmt
                | '=' 'delete' '(' str ')' ';'
                ;
 
-ParameterDecl ::= Opt<Attr> NonEmptyList<Specifier> Declarator
-                | Opt<Attr> 'this' NonEmptyList<Specifier> Declarator
-                | Opt<Attr> NonEmptyList<Specifier> Declarator '=' InitializerClause
-                | Opt<Attr> NonEmptyList<Specifier> Opt<AbstractDeclarator>
-                | Opt<Attr> 'this' NonEmptyList<Specifier> Opt<AbstractDeclarator>
-                | Opt<Attr> NonEmptyList<Specifier> Opt<AbstractDeclarator> '=' InitializerClause
-                | 'void'
-                | Opt<','> '...'
-                ;
+Parameter ::= Opt<Attr> NonEmptyList<Specifier> Declarator
+            | Opt<Attr> NonEmptyList<Specifier> Opt<AbstractDeclarator>
+            | Opt<Attr> NonEmptyList<Specifier> Declarator '=' InitializerClause                    // default in last
+            | Opt<Attr> NonEmptyList<Specifier> Opt<AbstractDeclarator> '=' InitializerClause       // except param_pack
+            | Opt<Attr> 'this' NonEmptyList<Specifier> Declarator                 // only first parameter
+            | Opt<Attr> 'this' NonEmptyList<Specifier> Opt<AbstractDeclarator>    // (of non static/virtual/cv/rev member function)
+            | 'void'                                                              // only if only thing present
+            |  '...'                                                              // only at the end, preceding comma is optionnal
+            ;
 
 Attribute ::= id
             | id '::' id
@@ -282,6 +282,47 @@ Stmt ::= Label Stmt
        | BlockDeclaration
        | Opt<Attr> 'try' CompoundStmt NonEmptyList<Handler>
        ;
+
+Expr ::= PrimaryExpr | ... ;
+
+PrimaryExpr ::= 'this'
+              | Litteral
+              | IdExpression
+              | LambdaExpression
+              | FoldExpression
+              | RequiresExpression
+              | '(' Expr ')'
+              ;
+
+
+LambdaExpression ::= Captures Opt<Template> Opt<Attr> End
+[With] {
+    Template ::= '<' TParams '>' Opt<TRequires>
+    End ::= '(' SepList<Parameter, ','> ')' List<Specs> Opt<Exception> Opt<Attr> Opt<TrailingRetType> Opt<RequiresClause> CompoundStmt
+          | Opt<TrailingRetType> Body
+          | Exception Opt<Attr> Opt<TrailingRetType> CompoundStmt
+          | List<Specs> Opt<Exception> Opt<Attr> Opt<TrailingRetType> CompoundStmt
+          ;
+    Body ::=  CompoundStmt ;
+    Spec ::= 'mutable' | 'constexpr' | 'consteval' | 'static' ;
+    Captures ::= '[' SepList<Capture, ','> ']' ;
+               | '[' CaptureDefault ']'
+               | '[' CaptureDefault ',' NonEmptySepList<Capture, ','> ']'
+               ;
+    CaptureDefault ::= '&' | '=' ;
+    Capture ::= id
+              | id '...'
+              | id Initializer
+              | '&' id
+              | '&' id '...'
+              | '&' id Initializer
+              | 'this'
+              | '*' 'this'
+              | '...' id Initializer
+              | '&' '...' id Initializer
+              ;
+};
+
 
 Handler ::= 'catch' '(' Opt<Attr> NonEmptyList<TypeSpecifier> Declarator ')' CompoundStmt
           | 'catch' '(' Opt<Attr> NonEmptyList<TypeSpecifier> Opt<AbstractDeclarator> ')' CompoundStmt

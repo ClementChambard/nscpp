@@ -59,6 +59,13 @@ pub struct Type {
 }
 
 impl Type {
+    pub fn void() -> Self {
+        Self {
+            cv: CVQualifiers::None,
+            ty: TypeType::Normal(String::from("void")),
+            loc: Location::new("", 0, 0),
+        }
+    }
     fn read_type_name(tok: &Token) -> Option<String> {
         if tok.tok.is_kw("void") {
             return Some(String::from("void"));

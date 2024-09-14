@@ -42,7 +42,7 @@ impl Label {
     pub fn ast_str(&self) -> String {
         match &self {
             Label::Normal(_, s) => s.clone(),
-            Label::Case(_, e) => String::from("case"), // TODO: all
+            Label::Case(_, _) => String::from("case"), // TODO: all
             Label::Default(_) => String::from("default"),
         }
     }

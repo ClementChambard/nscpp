@@ -1,0 +1,138 @@
+* Operators page:
+
+** assignment:
+a = b
+a += b
+a -= b
+a *= b
+a /= b
+a %= b
+a &= b
+a |= b
+a ^= b
+a <<= b
+a >>= b
+
+** increment, decrement:
+++a
+--a
+a++
+a--
+
+** arithmetic:
++a
+-a
+a + b
+a - b
+a * b
+a / b
+a % b
+~a
+a & b
+a | b
+a ^ b
+a << b
+a >> b
+
+** logical:
+!a
+a && b
+a || b
+
+** comparison:
+a == b
+a != b
+a < b
+a > b
+a <= b
+a >= b
+a <=> b
+
+** member access:
+a[...]
+*a
+&a
+a->b
+a.b
+a->*b
+a.*b
+
+** other:
+fcall: a(...)
+comma: a, b
+conditional: a ? b : c
+
+** special:
+static_cast converts one type to another related type
+dynamic_cast converts within inheritance hierarchies
+const_cast adds or removes cv-qualifiers
+reinterpret_cast converts type to unrelated type
+C-style cast converts one type to another by a mix of static_cast, const_cast, and reinterpret_cast
+new creates objects with dynamic storage duration
+delete destructs objects previously created by the new expression and releases obtained memory area
+sizeof queries the size of a type
+sizeof... queries the size of a parameter pack (since C++11)
+typeid queries the type information of a type
+noexcept checks if an expression can throw an exception (since C++11)
+alignof queries alignment requirements of a type (since C++11)
+
+* Precedence:
+
+| Precedence | Operator          | Description                                               | Associativity   |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|          1 | ::                | Scope resolution                                          | Left-to-right → |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|            | a++   a--         | Suffix/postfix increment and decrement                    |                 |
+|            | type()   type{}   | Functional cast                                           |                 |
+|          2 | a()               | Function call                                             |                 |
+|            | a[]               | Subscript                                                 |                 |
+|            | .   ->            | Member access                                             |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|            | ++a   --a         | Prefix increment and decrement                            | Right-to-left ← |
+|            | +a   -a           | Unary plus and minus                                      |                 |
+|            | !   ~             | Logical NOT and bitwise NOT                               |                 |
+|            | (type)            | C-style cast                                              |                 |
+|          3 | *a                | Indirection (dereference)                                 |                 |
+|            | &a                | Address-of                                                |                 |
+|            | sizeof            | Size-of[note 1]                                           |                 |
+|            | co_await          | await-expression (C++20)                                  |                 |
+|            | new   new[]       | Dynamic memory allocation                                 |                 |
+|            | delete   delete[] | Dynamic memory deallocation                               |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|          4 | .*   ->*          | Pointer-to-member                                         | Left-to-right → |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|          5 | a*b   a/b   a%b   | Multiplication, division, and remainder                   |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|          6 | a+b   a-b         | Addition and subtraction                                  |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|          7 | <<   >>           | Bitwise left shift and right shift                        |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|          8 | <=>               | Three-way comparison operator (since C++20)               |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|          9 | <   <=   >   >=   | For relational operators < and ≤ and > and ≥ respectively |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|         10 | ==   !=           | For equality operators = and ≠ respectively               |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|         11 | a&b               | Bitwise AND                                               |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|         12 | ^                 | Bitwise XOR (exclusive or)                                |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|         13 | binor             | Bitwise OR (inclusive or)                                 |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|         14 | &&                | Logical AND                                               |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|         15 | or                | Logical OR                                                |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|            | a?b:c             | Ternary conditional[note 2]                               | Right-to-left ← |
+|            | throw             | throw operator                                            |                 |
+|            | co_yield          | yield-expression (C++20)                                  |                 |
+|         16 | =                 | Direct assignment (provided by default for C++ classes)   |                 |
+|            | +=   -=           | Compound assignment by sum and difference                 |                 |
+|            | *=   /=   %=      | Compound assignment by product, quotient, and remainder   |                 |
+|            | <<=   >>=         | Compound assignment by bitwise left shift and right shift |                 |
+|            | &=   ^=  or_eq    | Compound assignment by bitwise AND, XOR, and OR           |                 |
+|------------+-------------------+-----------------------------------------------------------+-----------------|
+|         17 | ,                 | Comma                                                     | Left-to-right → |
+
+↑ The operand of sizeof can't be a C-style type cast: the expression sizeof (int) * p is unambiguously interpreted as (sizeof(int)) * p, but not sizeof((int)*p).
+↑ The expression in the middle of the conditional operator (between ? and :) is parsed as if parenthesized: its precedence relative to ?: is ignored.

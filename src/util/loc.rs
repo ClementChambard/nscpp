@@ -47,7 +47,8 @@ impl Location {
         }
     }
 
-    pub fn merge_in_place(&mut self, o: &Self) {
+    pub fn merge_in_place(&mut self, _o: &Self) {
+        unimplemented!()
     }
 
     pub fn merge(self, o: Self) -> Self {

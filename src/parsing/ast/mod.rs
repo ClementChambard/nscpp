@@ -9,6 +9,7 @@ mod stmt;
 mod translation_unit;
 mod trycatch;
 mod typename;
+mod constraints;
 
 pub use decl::Decl;
 pub use expr::Expr;
