@@ -1,0 +1,76 @@
+namespace 'namespace'	 [StartOfLine]	Loc=<./test.h:6:1>
+identifier 'ns'	 [LeadingSpace]	Loc=<./test.h:6:11>
+l_brace '{'	 [LeadingSpace]	Loc=<./test.h:6:14>
+void 'void'	 [StartOfLine]	Loc=<./test.h:7:1>
+identifier 'report_assertion_failure'	 [LeadingSpace]	Loc=<./test.h:7:6>
+l_paren '('		Loc=<./test.h:7:30>
+const 'const'		Loc=<./test.h:7:31>
+char 'char'	 [LeadingSpace]	Loc=<./test.h:7:37>
+star '*'	 [LeadingSpace]	Loc=<./test.h:7:42>
+comma ','		Loc=<./test.h:7:43>
+const 'const'	 [LeadingSpace]	Loc=<./test.h:7:45>
+char 'char'	 [LeadingSpace]	Loc=<./test.h:7:51>
+star '*'	 [LeadingSpace]	Loc=<./test.h:7:56>
+comma ','		Loc=<./test.h:7:57>
+const 'const'	 [LeadingSpace]	Loc=<./test.h:7:59>
+char 'char'	 [LeadingSpace]	Loc=<./test.h:7:65>
+star '*'	 [LeadingSpace]	Loc=<./test.h:7:70>
+comma ','		Loc=<./test.h:7:71>
+int 'int'	 [LeadingSpace]	Loc=<./test.h:7:73>
+r_paren ')'		Loc=<./test.h:7:76>
+semi ';'		Loc=<./test.h:7:77>
+r_brace '}'	 [StartOfLine]	Loc=<./test.h:8:1>
+int 'int'	 [StartOfLine]	Loc=<test.cpp:3:1>
+identifier 'main'	 [LeadingSpace]	Loc=<test.cpp:3:5>
+l_paren '('		Loc=<test.cpp:3:9>
+int 'int'		Loc=<test.cpp:3:10>
+identifier 'argc'	 [LeadingSpace]	Loc=<test.cpp:3:14>
+comma ','		Loc=<test.cpp:3:18>
+char 'char'	 [LeadingSpace]	Loc=<test.cpp:3:20>
+star '*'	 [LeadingSpace]	Loc=<test.cpp:3:25>
+star '*'		Loc=<test.cpp:3:26>
+identifier 'argv'		Loc=<test.cpp:3:27>
+r_paren ')'		Loc=<test.cpp:3:31>
+l_brace '{'	 [LeadingSpace]	Loc=<test.cpp:3:33>
+l_brace '{'	 [StartOfLine] [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:11:3>>
+if 'if'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:12:5>>
+l_paren '('	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:12:8>>
+numeric_constant '1'		Loc=<test.cpp:4:3 <Spelling=test.cpp:4:15>>
+plus '+'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=test.cpp:4:17>>
+numeric_constant '1'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=test.cpp:4:19>>
+equalequal '=='	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=test.cpp:4:21>>
+numeric_constant '2'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=test.cpp:4:24>>
+r_paren ')'		Loc=<test.cpp:4:3 <Spelling=./test.h:12:13>>
+l_brace '{'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:12:15>>
+r_brace '}'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:13:5>>
+else 'else'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:13:7>>
+l_brace '{'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:13:12>>
+coloncolon '::'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:14:7>>
+identifier 'ns'		Loc=<test.cpp:4:3 <Spelling=./test.h:14:9>>
+coloncolon '::'		Loc=<test.cpp:4:3 <Spelling=./test.h:14:11>>
+identifier 'report_assertion_failure'		Loc=<test.cpp:4:3 <Spelling=./test.h:14:13>>
+l_paren '('		Loc=<test.cpp:4:3 <Spelling=./test.h:14:37>>
+string_literal '"1 + 1 == 2"'		Loc=<test.cpp:4:3 <Spelling=<scratch space>:2:1>>
+comma ','		Loc=<test.cpp:4:3 <Spelling=./test.h:14:43>>
+string_literal '"Oh oh..."'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=test.cpp:4:27>>
+comma ','		Loc=<test.cpp:4:3 <Spelling=./test.h:14:52>>
+string_literal '"test.cpp"'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=<scratch space>:3:1>>
+comma ','		Loc=<test.cpp:4:3 <Spelling=./test.h:14:62>>
+numeric_constant '4'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=<scratch space>:4:1>>
+r_paren ')'		Loc=<test.cpp:4:3 <Spelling=./test.h:14:72>>
+semi ';'		Loc=<test.cpp:4:3 <Spelling=./test.h:14:73>>
+identifier '__builtin_trap'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:4:22>>
+l_paren '('		Loc=<test.cpp:4:3 <Spelling=./test.h:4:36>>
+r_paren ')'		Loc=<test.cpp:4:3 <Spelling=./test.h:4:37>>
+semi ';'		Loc=<test.cpp:4:3 <Spelling=./test.h:15:19>>
+r_brace '}'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:16:5>>
+r_brace '}'	 [LeadingSpace]	Loc=<test.cpp:4:3 <Spelling=./test.h:17:3>>
+semi ';'		Loc=<test.cpp:4:38>
+return 'return'	 [StartOfLine] [LeadingSpace]	Loc=<test.cpp:5:3>
+numeric_constant '1'	 [LeadingSpace]	Loc=<test.cpp:5:10 <Spelling=test.cpp:5:14>>
+plus '+'	 [LeadingSpace]	Loc=<test.cpp:5:10 <Spelling=test.cpp:2:21>>
+minus '-'	 [LeadingSpace]	Loc=<test.cpp:5:10 <Spelling=test.cpp:5:17>>
+numeric_constant '1'		Loc=<test.cpp:5:10 <Spelling=test.cpp:5:18>>
+semi ';'		Loc=<test.cpp:5:20>
+r_brace '}'	 [StartOfLine]	Loc=<test.cpp:6:1>
+eof ''		Loc=<test.cpp:6:2>

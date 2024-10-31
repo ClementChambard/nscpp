@@ -64,6 +64,8 @@ pub enum StmtType {
     Break,
     Continue,
     Return(Option<Expr>),
+    CoReturn(Option<Expr>),
+    CoReturnInit(Initializer),
     ReturnInit(Initializer),
     Goto(String),
     BlockDecl(BlockDeclaration),
@@ -88,6 +90,8 @@ impl StmtType {
             Self::Continue => "ContinueStmt",
             Self::Return(_) => "ReturnStmt",
             Self::ReturnInit(_) => "ReturnStmt",
+            Self::CoReturn(_) => "CoReturnStmt",
+            Self::CoReturnInit(_) => "CoReturnStmt",
             Self::Goto(_) => "GotoStmt",
             Self::BlockDecl(_) => "BlockDeclStmt",
             Self::Try(_, _) => "TryStmt",
@@ -150,6 +154,35 @@ impl Stmt {
             Self {
                 loc,
                 stmt: StmtType::Expr(expr),
+                attr,
+            },
+            &toks[1..],
+        ))
+    }
+
+    fn parse_co_return<'a>(
+        attr: Option<Attr>,
+        toks: &'a [Token],
+        ctx: &mut Context,
+    ) -> Option<(Self, &'a [Token])> {
+        let loc_start = if let Some(a) = &attr {
+            &a.loc
+        } else {
+            &toks.first()?.loc
+        };
+        let (stmt, toks) = if toks[1..].first()?.tok.is_punct("{") {
+            let (initializer, toks) = Initializer::parse_clause(&toks[1..], ctx)?;
+            (StmtType::CoReturnInit(initializer), toks)
+        } else {
+            let (expr, toks) = parse_opt(&toks[1..], ctx, Expr::parse);
+            (StmtType::CoReturn(expr), toks)
+        };
+        let semi = toks.first()?;
+        semi.check_punct(";")?;
+        Some((
+            Self {
+                loc: Location::from_merged(loc_start, &semi.loc),
+                stmt,
                 attr,
             },
             &toks[1..],
@@ -485,6 +518,8 @@ impl Stmt {
             ))
         } else if fst.tok.is_kw("return") {
             Self::parse_return(attr, toks, ctx)
+        } else if fst.tok.is_kw("co_return") {
+            Self::parse_co_return(attr, toks, ctx)
         } else if fst.tok.is_kw("goto") {
             let id = toks[1..].first()?.tok.ident()?;
             let semi = toks[2..].first()?;
@@ -561,8 +596,8 @@ impl Stmt {
         use ast_printing::AstPrint;
         match &self.stmt {
             StmtType::Compound(c, _) => ast_printing::print_ast_list_opt(c, lstr),
-            StmtType::Return(Some(e)) => Some(e.print_ast_end(lstr)),
-            StmtType::ReturnInit(i) => Some(format!("{i:?}")),
+            StmtType::Return(Some(e)) | StmtType::CoReturn(Some(e)) => Some(e.print_ast_end(lstr)),
+            StmtType::ReturnInit(i) | StmtType::CoReturnInit(i)=> Some(format!("{i:?}")),
             StmtType::If(_, i, e, s1, s2) => {
                 let mut out = String::new();
                 if let Some(i) = i {

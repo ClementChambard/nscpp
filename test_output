@@ -5,23 +5,21 @@ TranslationUnitDecl
 │     ├─ ParamVarDecl <line:6:44, line:6:55> char const *
 │     ├─ ParamVarDecl <line:6:58, line:6:69> char const *
 │     ╰─ ParamVarDecl <line:6:72, line:6:74> int
-╰─ FunctionDecl <line:3:0, line:11:32> main 'int (int, char * *)'
-   ├─ ParamVarDecl <line:3:9, line:3:16> argc int
-   ├─ ParamVarDecl <line:3:19, line:3:29> argv char * *
-   ╰─ CompoundStmt <line:3:0, line:11:32>
-      ├─ IfStmt <line:5:2, line:8:9> has_else
-      │  ├─ BinaryOpExpr <line:5:6, line:5:15> '=='
-      │  │  ├─ BinaryOpExpr <line:5:6, line:5:10> '+'
-      │  │  │  ├─ LitteralExpr <line:5:6, line:5:6> Int(1, I32)
-      │  │  │  ╰─ LitteralExpr <line:5:10, line:5:10> Int(1, I32)
-      │  │  ╰─ LitteralExpr <line:5:15, line:5:15> Int(0, I32)
-      │  ├─ CompoundStmt <line:5:2, line:6:18>
-      │  ╰─ CompoundStmt <line:6:2, line:8:9>
-      │     ╰─ ReturnStmt <line:7:4, line:7:21>
-      │        ╰─ LitteralExpr <line:7:11, line:7:20> Int(1298731982, I32)
-      ├─ NullStmt <line:8:3, line:8:3>
-      ╰─ ReturnStmt <line:10:2, line:10:15>
-         ╰─ BinaryOpExpr <line:10:9, line:10:14> '+'
-            ├─ LitteralExpr <line:10:9, line:10:9> Int(1, I32)
-            ╰─ UnaryOpExpr <line:10:13, line:10:14> '-'
-               ╰─ LitteralExpr <line:10:14, line:10:14> Int(1, I32)
+╰─ FunctionDecl <line:2:0, line:5:32> main 'int (int, char * *)'
+   ├─ ParamVarDecl <line:2:9, line:2:16> argc int
+   ├─ ParamVarDecl <line:2:19, line:2:29> argv char * *
+   ╰─ CompoundStmt <line:2:0, line:5:32>
+      ├─ FunctionCallExpr <line:3:2, line:3:36>
+      │  ├─ IdentExpr <line:3:2, line:3:12> NS_ASSERT_M
+      │  ├─ BinaryOpExpr <line:3:14, line:3:23> '=='
+      │  │  ├─ BinaryOpExpr <line:3:14, line:3:18> '+'
+      │  │  │  ├─ LitteralExpr <line:3:14, line:3:14> Int(1, I32)
+      │  │  │  ╰─ LitteralExpr <line:3:18, line:3:18> Int(1, I32)
+      │  │  ╰─ LitteralExpr <line:3:23, line:3:23> Int(2, I32)
+      │  ╰─ LitteralExpr <line:3:26, line:3:35> String("Oh oh...", Char)
+      ╰─ ReturnStmt <line:4:2, line:4:19>
+         ╰─ FunctionCallExpr <line:4:9, line:4:18>
+            ├─ IdentExpr <line:4:9, line:4:11> ADD
+            ├─ LitteralExpr <line:4:13, line:4:13> Int(1, I32)
+            ╰─ UnaryOpExpr <line:4:16, line:4:17> '-'
+               ╰─ LitteralExpr <line:4:17, line:4:17> Int(1, I32)

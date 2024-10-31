@@ -1,4 +1,3 @@
-extern crate unicode_xid;
 mod errors;
 mod file_opening;
 mod parsing;

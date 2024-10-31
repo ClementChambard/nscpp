@@ -1,0 +1,77 @@
+hash '#'	 [StartOfLine]	Loc=<test.cpp:1:1>
+raw_identifier 'include'		Loc=<test.cpp:1:2>
+unknown ' '		Loc=<test.cpp:1:9>
+string_literal '"test.h"'		Loc=<test.cpp:1:10>
+unknown '
+'		Loc=<test.cpp:1:18>
+hash '#'	 [StartOfLine]	Loc=<test.cpp:2:1>
+raw_identifier 'define'		Loc=<test.cpp:2:2>
+unknown ' '		Loc=<test.cpp:2:8>
+raw_identifier 'ADD'		Loc=<test.cpp:2:9>
+l_paren '('		Loc=<test.cpp:2:12>
+raw_identifier 'a'		Loc=<test.cpp:2:13>
+comma ','		Loc=<test.cpp:2:14>
+unknown ' '		Loc=<test.cpp:2:15>
+raw_identifier 'b'		Loc=<test.cpp:2:16>
+r_paren ')'		Loc=<test.cpp:2:17>
+unknown ' '		Loc=<test.cpp:2:18>
+raw_identifier 'a'		Loc=<test.cpp:2:19>
+unknown ' '		Loc=<test.cpp:2:20>
+plus '+'		Loc=<test.cpp:2:21>
+unknown ' '		Loc=<test.cpp:2:22>
+raw_identifier 'b'		Loc=<test.cpp:2:23>
+unknown '
+'		Loc=<test.cpp:2:24>
+raw_identifier 'int'	 [StartOfLine]	Loc=<test.cpp:3:1>
+unknown ' '		Loc=<test.cpp:3:4>
+raw_identifier 'main'		Loc=<test.cpp:3:5>
+l_paren '('		Loc=<test.cpp:3:9>
+raw_identifier 'int'		Loc=<test.cpp:3:10>
+unknown ' '		Loc=<test.cpp:3:13>
+raw_identifier 'argc'		Loc=<test.cpp:3:14>
+comma ','		Loc=<test.cpp:3:18>
+unknown ' '		Loc=<test.cpp:3:19>
+raw_identifier 'char'		Loc=<test.cpp:3:20>
+unknown ' '		Loc=<test.cpp:3:24>
+star '*'		Loc=<test.cpp:3:25>
+star '*'		Loc=<test.cpp:3:26>
+raw_identifier 'argv'		Loc=<test.cpp:3:27>
+r_paren ')'		Loc=<test.cpp:3:31>
+unknown ' '		Loc=<test.cpp:3:32>
+l_brace '{'		Loc=<test.cpp:3:33>
+unknown '
+  '		Loc=<test.cpp:3:34>
+raw_identifier 'NS_ASSERT_M'	 [StartOfLine]	Loc=<test.cpp:4:3>
+l_paren '('		Loc=<test.cpp:4:14>
+numeric_constant '1'		Loc=<test.cpp:4:15>
+unknown ' '		Loc=<test.cpp:4:16>
+plus '+'		Loc=<test.cpp:4:17>
+unknown ' '		Loc=<test.cpp:4:18>
+numeric_constant '1'		Loc=<test.cpp:4:19>
+unknown ' '		Loc=<test.cpp:4:20>
+equalequal '=='		Loc=<test.cpp:4:21>
+unknown ' '		Loc=<test.cpp:4:23>
+numeric_constant '2'		Loc=<test.cpp:4:24>
+comma ','		Loc=<test.cpp:4:25>
+unknown ' '		Loc=<test.cpp:4:26>
+string_literal '"Oh oh..."'		Loc=<test.cpp:4:27>
+r_paren ')'		Loc=<test.cpp:4:37>
+semi ';'		Loc=<test.cpp:4:38>
+unknown '
+  '		Loc=<test.cpp:4:39>
+raw_identifier 'return'	 [StartOfLine]	Loc=<test.cpp:5:3>
+unknown ' '		Loc=<test.cpp:5:9>
+raw_identifier 'ADD'		Loc=<test.cpp:5:10>
+l_paren '('		Loc=<test.cpp:5:13>
+numeric_constant '1'		Loc=<test.cpp:5:14>
+comma ','		Loc=<test.cpp:5:15>
+unknown ' '		Loc=<test.cpp:5:16>
+minus '-'		Loc=<test.cpp:5:17>
+numeric_constant '1'		Loc=<test.cpp:5:18>
+r_paren ')'		Loc=<test.cpp:5:19>
+semi ';'		Loc=<test.cpp:5:20>
+unknown '
+'		Loc=<test.cpp:5:21>
+r_brace '}'	 [StartOfLine]	Loc=<test.cpp:6:1>
+unknown '
+'		Loc=<test.cpp:6:2>

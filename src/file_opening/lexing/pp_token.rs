@@ -276,17 +276,14 @@ fn parse_whitespace<'a>(
 }
 
 fn is_ident_start(c: char) -> bool {
-    match c {
-        'a'..='z' | 'A'..='Z' | '_' => true,
-        _ => unicode_xid::UnicodeXID::is_xid_start(c),
+    if c == '_' {
+        return true;
     }
+    crate::util::xid::is_xid_start(c)
 }
 
 fn is_ident_continue(c: char) -> bool {
-    match c {
-        'a'..='z' | 'A'..='Z' | '_' | '0'..='9' => true,
-        _ => unicode_xid::UnicodeXID::is_xid_continue(c),
-    }
+    crate::util::xid::is_xid_continue(c)
 }
 
 fn parse_ident(s: &str) -> Option<(usize, PPTokType)> {
